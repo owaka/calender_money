@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>account_calemdar</title>
+  <script src="/assets/ja/Chart.min.js"></script>
+</head>
+<body>
+
+  <form action="/create" method="post">
+    <label for="title">商品名</label>
+      <input type="text" name="title" id="title">
+    <label for="price">金額</label>
+      <input type="text" name="price" id="price">
+      <select name="category" id="category">
+        <% @categories.each do |category| %>
+         <option value="<%= category.id %>"><%= category.name %></option>
+        <% end %>
+      </select>
+      <input type="submit" value="追加">
+  </form>
+
+<canvas id="graph" height="500" width="500"></canvas>
+<script>
+
+colors = ['#F44336', '#448AFF', '#FF9800', '#009688', '#E91E63', '#00BCD4'];
+
+var doughnutData = [
+  <% @items.each_with_index do |item, idx| %>
+  {
+    value: <%= item.price %>,
+    label: '<%= item.title %>',
+    color: colors[<%= idx %>]
+  },
+  <% end %>
+];
+
+var myDoughnut = new Chart(document.getElementById("graph").getContext("2d")).Doughnut(doughnutData);
+</script>
+
+<ul>
+  <% @categories.each do |category| %>
+    <li><a href="/category/<%= category.id %>"><%= category.name %></a></li>
+  <% end %>
+</ul>
+
+<% if @category_name.present? %>
+  <h2><%= @category_name %></h2>
+<% end %>
+
+  <div>
+    <% @items.each do |item| %>
+    <div>
+      <p><%= item.title %></p>
+      <p><%= item.price %>円</p>
+      <span>
+        <form action="/delete/<%= item.id %>" method="post">
+          <input type="submit" value="削除">
+        </form>
+      </span>
+      <span>
+        <form action="/edit/<%= item.id %>" method="post">
+          <input type="submit" value="編集">
+        </form>
+      </span>
+      <p><%= item.category.name %></p>
+    </div>
+    <% end %>
+  </div>
+  <div>
+    <p>合計:<%= @total %>円</p>
+  </div>
+
+</body>
+</html>

@@ -5,9 +5,11 @@
   <title>calender_money</title>
   <script src="/assets/js/Chart.min.js"></script>
 </head>
+<center>
 <body>
 
-  <form action="/create" method="post">
+    <label for="date">日時</label>
+      <input type="date" name="example2" value="2015-06-24">
     <label for="title">商品名</label>
       <input type="text" name="title" id="title">
     <label for="price">金額</label>
@@ -38,11 +40,14 @@ var doughnutData = [
 var myDoughnut = new Chart(document.getElementById("graph").getContext("2d")).Doughnut(doughnutData);
 </script>
 
+</center>
+
 <ul>
   <% @categories.each do |category| %>
     <li><a href="/category/<%= category.id %>"><%= category.name %></a></li>
   <% end %>
 </ul>
+
 
 <% if @category_name.present? %>
   <h2><%= @category_name %></h2>

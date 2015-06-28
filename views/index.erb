@@ -4,12 +4,14 @@
   <meta charset="UTF-8">
   <title>calender_money</title>
   <script src="/assets/js/Chart.min.js"></script>
+  <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
 </head>
 <center>
 <body>
 
+<form action="/create" method="post">
     <label for="date">日時</label>
-      <input type="date" name="example2" value="2015-06-24">
+      <input type="date" name="date" value="2015-06-24">
     <label for="title">商品名</label>
       <input type="text" name="title" id="title">
     <label for="price">金額</label>
@@ -42,12 +44,44 @@ var myDoughnut = new Chart(document.getElementById("graph").getContext("2d")).Do
 
 </center>
 
+<table class="table table-hover">
+  <tr>
+    <th></th>
+    <% @categories.each do |category| %>
+      <th><a href="/category/<%= category.id %>"><%= category.name %></a></th>
+    <% end %>
+    <!-- <th>収入</th>
+    <th>食事</th>
+    <th>服</th>
+    <th>ゲーム</th>
+    <th>交通費</th>
+    <th>その他</th> -->
+  </tr>
+  <tr>
+    <th>1 (月)</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+  <tr>
+    <th>2 (火)</th>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
 <ul>
   <% @categories.each do |category| %>
     <li><a href="/category/<%= category.id %>"><%= category.name %></a></li>
   <% end %>
 </ul>
-
 
 <% if @category_name.present? %>
   <h2><%= @category_name %></h2>
@@ -56,6 +90,7 @@ var myDoughnut = new Chart(document.getElementById("graph").getContext("2d")).Do
   <div>
     <% @items.each do |item| %>
     <div>
+      <p><%= item.paid_at %></p>
       <p><%= item.title %></p>
       <p><%= item.price %>円</p>
       <span>

@@ -13,6 +13,7 @@ end
 
 post '/create' do
   Item.create({
+      paid_at:params[:date],
       title:params[:title],
       price:params[:price],
       category_id:params[:category]

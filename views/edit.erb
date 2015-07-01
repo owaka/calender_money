@@ -11,6 +11,11 @@
     <input type="text" name="title" value="<%= @item.title %>">
     <label for="title">金額</label>
     <input type="text" name="price" value="<%= @item.price %>">
+    <select name="category" class="form-control" id="category">
+      <% @categories.each do |category| %>
+      <option value="<%= category.id %>"><%= category.name %></option>
+      <% end %>
+    </select>
     <p><input type="submit" value="編集完了"></p>
   </form>
 </body>

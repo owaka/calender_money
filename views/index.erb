@@ -5,110 +5,126 @@
   <title>calender_money</title>
   <script src="/assets/js/Chart.min.js"></script>
   <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/assets/css/style.css">
 </head>
-<center>
-<body>
+  <body>
 
-<form action="/create" method="post">
-    <label for="date">日時</label>
-      <input type="date" name="date" value="2015-06-24">
-    <label for="title">商品名</label>
-      <input type="text" name="title" id="title">
-    <label for="price">金額</label>
-      <input type="text" name="price" id="price">
-      <select name="category" id="category">
-        <% @categories.each do |category| %>
-         <option value="<%= category.id %>"><%= category.name %></option>
+    <div class="container">
+      <div class="main">
+        <form class="form-inline" action="/create" method="post">
+          <div class="form-group">
+            <label for="date">日時</label>
+            <input type="date" class="form-control" name="date" value="2015-07-01">
+          </div>
+          <div class="form-group">
+            <label for="title">商品名</label>
+            <input type="text" class="form-control" name="title" id="title">
+          </div>
+          <div class="form-group">
+            <label for="price">金額</label>
+            <input type="text" class="form-control" name="price" id="price">
+          </div>
+          <select name="category" class="form-control" id="category">
+            <% @categories.each do |category| %>
+            <option value="<%= category.id %>"><%= category.name %></option>
+            <% end %>
+          </select>
+          <input type="submit" class="btn btn-default" value="追加">
+        </form>
+        <div class="graph">
+          <canvas id="graph" height="400" width="400"></canvas>
+        </div>
+        <script>
+
+        colors = ['#F44336', '#448AFF', '#FF9800', '#009688', '#E91E63', '#00BCD4'];
+
+        var doughnutData = [
+          <% @items.each_with_index do |item, idx| %>
+          {
+            value: <%= item.price %>,
+            label: '<%= item.title %>',
+            color: colors[<%= idx %>]
+          },
+          <% end %>
+        ];
+
+        var myDoughnut = new Chart(document.getElementById("graph").getContext("2d")).Doughnut(doughnutData);
+        </script>
+
+      <table class="table table-hover">
+        <tr>
+          <th></th>
+          <% @categories.each do |category| %>
+          <th><a href="/category/<%= category.id %>"><%= category.name %></a></th>
+          <% end %>
+          <th></th>
+          <th></th>
+          <!-- <th>収入</th>
+          <th>食事</th>
+          <th>服</th>
+          <th>ゲーム</th>
+          <th>交通費</th>
+          <th>その他</th> -->
+        </tr>
+        <% @items.each do |item| %>
+        <tr>
+          <th><%= item.paid_at %></th>
+          <td>
+            <% if item.category_id == 1 %>
+              <%= item.title + " " + item.price.to_s %>
+            <% end %>
+          </td>
+          <td>
+            <% if item.category_id == 2 %>
+              <%= item.title + " " + item.price.to_s %>
+            <% end %>
+          </td>
+          <td>
+            <% if item.category_id == 3 %>
+              <%= item.title + " " + item.price.to_s %>
+            <% end %>
+          </td>
+          <td>
+            <% if item.category_id == 4 %>
+              <%= item.title + " " + item.price.to_s %>
+            <% end %>
+          </td>
+          <td>
+            <% if item.category_id == 5 %>
+              <%= item.title + " " + item.price.to_s %>
+            <% end %>
+          </td>
+          <td>
+            <% if item.category_id == 6 %>
+              <%= item.title + " " + item.price.to_s %>
+            <% end %>
+          </td>
+          <td>
+            <span>
+              <form action="/delete/<%= item.id %>" method="post">
+                <input type="submit" class="btn btn-default" value="削除">
+              </form>
+            </span>
+          </td>
+          <td>
+            <span>
+              <form action="/edit/<%= item.id %>" method="post">
+                <input type="submit"  class="btn btn-default"value="編集">
+              </form>
+            </span>
+          </td>
+        </tr>
         <% end %>
-      </select>
-      <input type="submit" value="追加">
-  </form>
+      </table>
 
-<canvas id="graph" height="500" width="500"></canvas>
-<script>
+      <% if @category_name.present? %>
+      <h2><%= @category_name %></h2>
+      <% end %>
 
-colors = ['#F44336', '#448AFF', '#FF9800', '#009688', '#E91E63', '#00BCD4'];
-
-var doughnutData = [
-  <% @items.each_with_index do |item, idx| %>
-  {
-    value: <%= item.price %>,
-    label: '<%= item.title %>',
-    color: colors[<%= idx %>]
-  },
-  <% end %>
-];
-
-var myDoughnut = new Chart(document.getElementById("graph").getContext("2d")).Doughnut(doughnutData);
-</script>
-
-</center>
-
-<table class="table table-hover">
-  <tr>
-    <th></th>
-    <% @categories.each do |category| %>
-      <th><a href="/category/<%= category.id %>"><%= category.name %></a></th>
-    <% end %>
-    <!-- <th>収入</th>
-    <th>食事</th>
-    <th>服</th>
-    <th>ゲーム</th>
-    <th>交通費</th>
-    <th>その他</th> -->
-  </tr>
-  <tr>
-    <th>1 (月)</th>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-  <tr>
-    <th>2 (火)</th>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>
-</table>
-
-<ul>
-  <% @categories.each do |category| %>
-    <li><a href="/category/<%= category.id %>"><%= category.name %></a></li>
-  <% end %>
-</ul>
-
-<% if @category_name.present? %>
-  <h2><%= @category_name %></h2>
-<% end %>
-
-  <div>
-    <% @items.each do |item| %>
-    <div>
-      <p><%= item.paid_at %></p>
-      <p><%= item.title %></p>
-      <p><%= item.price %>円</p>
-      <span>
-        <form action="/delete/<%= item.id %>" method="post">
-          <input type="submit" value="削除">
-        </form>
-      </span>
-      <span>
-        <form action="/edit/<%= item.id %>" method="post">
-          <input type="submit" value="編集">
-        </form>
-      </span>
-      <p><%= item.category.name %></p>
+      <div>
+        <p>合計:<%= @total %>円</p>
+      </div>
     </div>
-    <% end %>
-  </div>
-  <div>
-    <p>合計:<%= @total %>円</p>
   </div>
 
 </body>
